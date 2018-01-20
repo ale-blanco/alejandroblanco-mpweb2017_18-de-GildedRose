@@ -1,5 +1,10 @@
 <?php
-require_once 'gilded_rose.php';
+
+use GildedRose\GildedRose;
+use GildedRose\Item;
+
+require_once 'vendor/autoload.php';
+
 echo "OMGHAI!\n";
 $items = array(
     new Item('+5 Dexterity Vest', 10, 20),
