@@ -8,6 +8,11 @@ class GildedRose
     const AGEDBRIE = 'Aged Brie';
     const SULFURAS = 'Sulfuras, Hand of Ragnaros';
 
+    const UP_LIMIT = 50;
+    const FIRST_TIME_LIMIT = 10;
+    const SECOND_TIME_LIMIT = 5;
+    const VARIATION_QUALITY = 1;
+
     private $items;
 
     public function __construct($items)
@@ -21,21 +26,21 @@ class GildedRose
             if ($item->name != self::AGEDBRIE and $item->name != self::BACKSTAGE) {
                 if ($item->quality > 0) {
                     if ($item->name != self::SULFURAS) {
-                        $item->quality = $item->quality - 1;
+                        $item->quality = $item->quality - self::VARIATION_QUALITY;
                     }
                 }
             } else {
-                if ($item->quality < 50) {
-                    $item->quality = $item->quality + 1;
+                if ($item->quality < self::UP_LIMIT) {
+                    $item->quality = $item->quality + self::VARIATION_QUALITY;
                     if ($item->name == self::BACKSTAGE) {
-                        if ($item->sell_in < 11) {
-                            if ($item->quality < 50) {
-                                $item->quality = $item->quality + 1;
+                        if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
+                            if ($item->quality < self::UP_LIMIT) {
+                                $item->quality = $item->quality + self::VARIATION_QUALITY;
                             }
                         }
-                        if ($item->sell_in < 6) {
-                            if ($item->quality < 50) {
-                                $item->quality = $item->quality + 1;
+                        if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
+                            if ($item->quality < self::UP_LIMIT) {
+                                $item->quality = $item->quality + self::VARIATION_QUALITY;
                             }
                         }
                     }
@@ -43,7 +48,7 @@ class GildedRose
             }
 
             if ($item->name != self::SULFURAS) {
-                $item->sell_in = $item->sell_in - 1;
+                $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
             }
 
             if ($item->sell_in < 0) {
@@ -51,15 +56,15 @@ class GildedRose
                     if ($item->name != self::BACKSTAGE) {
                         if ($item->quality > 0) {
                             if ($item->name != self::SULFURAS) {
-                                $item->quality = $item->quality - 1;
+                                $item->quality = $item->quality - self::VARIATION_QUALITY;
                             }
                         }
                     } else {
                         $item->quality = $item->quality - $item->quality;
                     }
                 } else {
-                    if ($item->quality < 50) {
-                        $item->quality = $item->quality + 1;
+                    if ($item->quality < self::UP_LIMIT) {
+                        $item->quality = $item->quality + self::VARIATION_QUALITY;
                     }
                 }
             }
