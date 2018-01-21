@@ -24,4 +24,9 @@ final class SulfurasItemUpdater extends GeneraltemUpdater
     {
         return;
     }
+
+    public function checkSellinAndUpdateQuality(Item $item): void
+    {
+        return;
+    }
 }

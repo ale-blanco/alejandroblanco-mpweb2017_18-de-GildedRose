@@ -9,12 +9,7 @@ use GildedRose\ItemUpdater\SulfurasItemUpdater;
 
 class GildedRose
 {
-    const UP_LIMIT = 50;
-    const FIRST_TIME_LIMIT = 10;
-    const SECOND_TIME_LIMIT = 5;
-    const VARIATION_QUALITY = 1;
     const DOWN_LIMIT_SELLIN = 0;
-    const DOWN_LIMIT_QUALITY = 0;
 
     private $items;
 
@@ -28,14 +23,16 @@ class GildedRose
         foreach ($this->items as $item) {
             $this->updateItemQuality($item);
             $this->updateItemSellIn($item);
-            $this->checkSellInAndUpdateQuality($item);
+            if ($item->sell_in < self::DOWN_LIMIT_SELLIN) {
+                $this->checkSellInAndUpdateQuality($item);
+            }
         }
     }
 
     private function updateItemQuality(Item $item): void
     {
         $normalUpdater = new NormalItemUpdater();
-        if ($normalUpdater->isItemForThisType($item) && $item->quality > self::DOWN_LIMIT_QUALITY) {
+        if ($normalUpdater->isItemForThisType($item)) {
             $normalUpdater->updateItemQuality($item);
             return;
         }
@@ -88,39 +85,28 @@ class GildedRose
 
     private function checkSellInAndUpdateQuality(Item $item): void
     {
-        if ($item->sell_in >= self::DOWN_LIMIT_SELLIN) {
+        $normalUpdater = new NormalItemUpdater();
+        if ($normalUpdater->isItemForThisType($item)) {
+            $normalUpdater->checkSellinAndUpdateQuality($item);
             return;
         }
 
-        if ($item->name === NormalItemUpdater::ITEM_AGEDBRIE && $item->quality < self::UP_LIMIT) {
-            $this->increaseQuality($item);
+        $sulfurasUpdater = new SulfurasItemUpdater();
+        if ($sulfurasUpdater->isItemForThisType($item)) {
+            $sulfurasUpdater->checkSellinAndUpdateQuality($item);
             return;
         }
 
-        if ($item->name === NormalItemUpdater::ITEM_BACKSTAGE) {
-            $this->clearQuality($item);
+        $backstageUpdater = new BackstageItemUpdater();
+        if ($backstageUpdater->isItemForThisType($item)) {
+            $backstageUpdater->checkSellinAndUpdateQuality($item);
             return;
         }
 
-        if ($item->quality <= self::DOWN_LIMIT_QUALITY || $item->name === NormalItemUpdater::ITEM_SULFURAS) {
+        $agedbrieUpdater = new AgedbrieItemUpdater();
+        if ($agedbrieUpdater->isItemForThisType($item)) {
+            $agedbrieUpdater->checkSellinAndUpdateQuality($item);
             return;
         }
-
-        $this->decreaseQuality($item);
-    }
-
-    private function increaseQuality(Item $item): void
-    {
-        $item->quality = $item->quality + self::VARIATION_QUALITY;
-    }
-
-    private function decreaseQuality(Item $item): void
-    {
-        $item->quality = $item->quality - self::VARIATION_QUALITY;
-    }
-
-    private function clearQuality(Item $item): void
-    {
-        $item->quality = self::DOWN_LIMIT_QUALITY;
     }
 }

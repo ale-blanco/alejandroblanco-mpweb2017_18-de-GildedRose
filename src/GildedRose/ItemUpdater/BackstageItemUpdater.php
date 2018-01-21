@@ -36,4 +36,9 @@ final class BackstageItemUpdater extends GeneraltemUpdater
     {
         $this->updateNormalSellIn($item);
     }
+
+    public function checkSellinAndUpdateQuality(Item $item): void
+    {
+        $this->clearQuality($item);
+    }
 }
