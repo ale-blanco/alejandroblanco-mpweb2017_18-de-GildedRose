@@ -36,7 +36,7 @@ class GildedRose
         if ($item->name != self::ITEM_AGEDBRIE && $item->name != self::ITEM_BACKSTAGE
             && $item->name != self::ITEM_SULFURAS && $item->quality > self::DOWN_LIMIT_QUALITY
         ) {
-            $item->quality = $item->quality - self::VARIATION_QUALITY;
+            $this->decreaseQuality($item);
             return;
         }
 
@@ -44,7 +44,7 @@ class GildedRose
             return;
         }
 
-        $item->quality = $item->quality + self::VARIATION_QUALITY;
+        $this->increaseQuality($item);
 
         if ($item->quality >= self::UP_LIMIT) {
             return;
@@ -55,11 +55,11 @@ class GildedRose
         }
 
         if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
-            $item->quality = $item->quality + self::VARIATION_QUALITY;
+            $this->increaseQuality($item);
         }
 
         if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
-            $item->quality = $item->quality + self::VARIATION_QUALITY;
+            $this->increaseQuality($item);
         }
     }
 
@@ -69,7 +69,7 @@ class GildedRose
             return;
         }
 
-        $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
+        $this->decreaseSellIn($item);
     }
 
     private function checkSellInAndUpdateQuality(Item $item): void
@@ -79,18 +79,39 @@ class GildedRose
         }
 
         if ($item->name === self::ITEM_AGEDBRIE && $item->quality < self::UP_LIMIT) {
-            $item->quality = $item->quality + self::VARIATION_QUALITY;
+            $this->increaseQuality($item);
             return;
         }
 
         if ($item->name === self::ITEM_BACKSTAGE) {
-            $item->quality = $item->quality - $item->quality;
+            $this->clearQuality($item);
+            return;
         }
 
         if ($item->quality <= self::DOWN_LIMIT_QUALITY || $item->name === self::ITEM_SULFURAS) {
             return;
         }
 
+        $this->decreaseQuality($item);
+    }
+
+    private function increaseQuality(Item $item): void
+    {
+        $item->quality = $item->quality + self::VARIATION_QUALITY;
+    }
+
+    private function decreaseQuality(Item $item): void
+    {
         $item->quality = $item->quality - self::VARIATION_QUALITY;
+    }
+
+    private function clearQuality(Item $item): void
+    {
+        $item->quality = self::DOWN_LIMIT_QUALITY;
+    }
+
+    private function decreaseSellIn(Item $item): void
+    {
+        $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
     }
 }
