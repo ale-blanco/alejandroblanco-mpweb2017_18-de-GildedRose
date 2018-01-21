@@ -23,49 +23,62 @@ class GildedRose
     public function update_quality(): void
     {
         foreach ($this->items as $item) {
-            if ($item->name != self::ITEM_AGEDBRIE and $item->name != self::ITEM_BACKSTAGE) {
-                if ($item->quality > 0) {
-                    if ($item->name != self::ITEM_SULFURAS) {
-                        $item->quality = $item->quality - self::VARIATION_QUALITY;
+            $this->updateItemQuality($item);
+            $this->updateItemSellIn($item);
+            $this->checkSellInAndUpdateQuality($item);
+        }
+    }
+
+    private function updateItemQuality(Item $item): void
+    {
+        if ($item->name != self::ITEM_AGEDBRIE and $item->name != self::ITEM_BACKSTAGE) {
+            if ($item->quality > 0) {
+                if ($item->name != self::ITEM_SULFURAS) {
+                    $item->quality = $item->quality - self::VARIATION_QUALITY;
+                }
+            }
+        } else {
+            if ($item->quality < self::UP_LIMIT) {
+                $item->quality = $item->quality + self::VARIATION_QUALITY;
+                if ($item->name == self::ITEM_BACKSTAGE) {
+                    if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
+                        if ($item->quality < self::UP_LIMIT) {
+                            $item->quality = $item->quality + self::VARIATION_QUALITY;
+                        }
                     }
+                    if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
+                        if ($item->quality < self::UP_LIMIT) {
+                            $item->quality = $item->quality + self::VARIATION_QUALITY;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private function updateItemSellIn(Item $item): void
+    {
+        if ($item->name != self::ITEM_SULFURAS) {
+            $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
+        }
+    }
+
+    private function checkSellInAndUpdateQuality(Item $item): void
+    {
+        if ($item->sell_in < 0) {
+            if ($item->name != self::ITEM_AGEDBRIE) {
+                if ($item->name != self::ITEM_BACKSTAGE) {
+                    if ($item->quality > 0) {
+                        if ($item->name != self::ITEM_SULFURAS) {
+                            $item->quality = $item->quality - self::VARIATION_QUALITY;
+                        }
+                    }
+                } else {
+                    $item->quality = $item->quality - $item->quality;
                 }
             } else {
                 if ($item->quality < self::UP_LIMIT) {
                     $item->quality = $item->quality + self::VARIATION_QUALITY;
-                    if ($item->name == self::ITEM_BACKSTAGE) {
-                        if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
-                            if ($item->quality < self::UP_LIMIT) {
-                                $item->quality = $item->quality + self::VARIATION_QUALITY;
-                            }
-                        }
-                        if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
-                            if ($item->quality < self::UP_LIMIT) {
-                                $item->quality = $item->quality + self::VARIATION_QUALITY;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if ($item->name != self::ITEM_SULFURAS) {
-                $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
-            }
-
-            if ($item->sell_in < 0) {
-                if ($item->name != self::ITEM_AGEDBRIE) {
-                    if ($item->name != self::ITEM_BACKSTAGE) {
-                        if ($item->quality > 0) {
-                            if ($item->name != self::ITEM_SULFURAS) {
-                                $item->quality = $item->quality - self::VARIATION_QUALITY;
-                            }
-                        }
-                    } else {
-                        $item->quality = $item->quality - $item->quality;
-                    }
-                } else {
-                    if ($item->quality < self::UP_LIMIT) {
-                        $item->quality = $item->quality + self::VARIATION_QUALITY;
-                    }
                 }
             }
         }
