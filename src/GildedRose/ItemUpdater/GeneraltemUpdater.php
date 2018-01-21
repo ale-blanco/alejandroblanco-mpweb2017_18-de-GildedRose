@@ -49,4 +49,9 @@ abstract class GeneraltemUpdater
     {
         return $item->sell_in < self::DOWN_LIMIT_SELLIN;
     }
+
+    protected function isUpQualityLimit(Item $item): bool
+    {
+        return $item->quality >= self::UP_LIMIT;
+    }
 }

@@ -13,7 +13,7 @@ final class AgedbrieItemUpdater extends GeneraltemUpdater
 
     public function updateItemQuality(Item $item): void
     {
-        if ($item->quality >= self::UP_LIMIT) {
+        if ($this->isUpQualityLimit($item)) {
             return;
         }
 
