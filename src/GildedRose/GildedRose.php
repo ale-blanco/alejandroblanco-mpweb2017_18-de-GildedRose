@@ -2,12 +2,13 @@
 
 namespace GildedRose;
 
+use GildedRose\ItemUpdater\AgedbrieItemUpdater;
+use GildedRose\ItemUpdater\BackstageItemUpdater;
+use GildedRose\ItemUpdater\NormalItemUpdater;
+use GildedRose\ItemUpdater\SulfurasItemUpdater;
+
 class GildedRose
 {
-    const ITEM_BACKSTAGE = 'Backstage passes to a TAFKAL80ETC concert';
-    const ITEM_AGEDBRIE = 'Aged Brie';
-    const ITEM_SULFURAS = 'Sulfuras, Hand of Ragnaros';
-
     const UP_LIMIT = 50;
     const FIRST_TIME_LIMIT = 10;
     const SECOND_TIME_LIMIT = 5;
@@ -33,39 +34,34 @@ class GildedRose
 
     private function updateItemQuality(Item $item): void
     {
-        if ($item->name != self::ITEM_AGEDBRIE && $item->name != self::ITEM_BACKSTAGE
-            && $item->name != self::ITEM_SULFURAS && $item->quality > self::DOWN_LIMIT_QUALITY
-        ) {
-            $this->decreaseQuality($item);
+        $normalUpdater = new NormalItemUpdater();
+        if ($normalUpdater->isItemForThisType($item) && $item->quality > self::DOWN_LIMIT_QUALITY) {
+            $normalUpdater->updateItemQuality($item);
             return;
         }
 
-        if ($item->quality >= self::UP_LIMIT) {
+        $sulfurasUpdater = new SulfurasItemUpdater();
+        if ($sulfurasUpdater->isItemForThisType($item)) {
+            $sulfurasUpdater->updateItemQuality($item);
             return;
         }
 
-        $this->increaseQuality($item);
-
-        if ($item->quality >= self::UP_LIMIT) {
+        $backstageUpdater = new BackstageItemUpdater();
+        if ($backstageUpdater->isItemForThisType($item)) {
+            $backstageUpdater->updateItemQuality($item);
             return;
         }
 
-        if ($item->name != self::ITEM_BACKSTAGE) {
+        $agedbrieUpdater = new AgedbrieItemUpdater();
+        if ($agedbrieUpdater->isItemForThisType($item)) {
+            $agedbrieUpdater->updateItemQuality($item);
             return;
-        }
-
-        if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
-            $this->increaseQuality($item);
-        }
-
-        if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
-            $this->increaseQuality($item);
         }
     }
 
     private function updateItemSellIn(Item $item): void
     {
-        if ($item->name === self::ITEM_SULFURAS) {
+        if ($item->name === NormalItemUpdater::ITEM_SULFURAS) {
             return;
         }
 
@@ -78,17 +74,17 @@ class GildedRose
             return;
         }
 
-        if ($item->name === self::ITEM_AGEDBRIE && $item->quality < self::UP_LIMIT) {
+        if ($item->name === NormalItemUpdater::ITEM_AGEDBRIE && $item->quality < self::UP_LIMIT) {
             $this->increaseQuality($item);
             return;
         }
 
-        if ($item->name === self::ITEM_BACKSTAGE) {
+        if ($item->name === NormalItemUpdater::ITEM_BACKSTAGE) {
             $this->clearQuality($item);
             return;
         }
 
-        if ($item->quality <= self::DOWN_LIMIT_QUALITY || $item->name === self::ITEM_SULFURAS) {
+        if ($item->quality <= self::DOWN_LIMIT_QUALITY || $item->name === NormalItemUpdater::ITEM_SULFURAS) {
             return;
         }
 
