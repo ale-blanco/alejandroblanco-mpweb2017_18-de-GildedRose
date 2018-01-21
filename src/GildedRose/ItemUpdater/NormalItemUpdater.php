@@ -29,6 +29,10 @@ final class NormalItemUpdater extends GeneraltemUpdater
 
     public function checkSellinAndUpdateQuality(Item $item): void
     {
+        if (!$this->isInDownSellinLimit($item)) {
+            return;
+        }
+
         if ($item->quality <= self::DOWN_LIMIT_QUALITY ) {
             return;
         }

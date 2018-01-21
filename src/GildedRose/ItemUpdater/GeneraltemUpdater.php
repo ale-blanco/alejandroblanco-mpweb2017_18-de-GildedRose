@@ -14,6 +14,8 @@ abstract class GeneraltemUpdater
     const FIRST_TIME_LIMIT = 10;
     const SECOND_TIME_LIMIT = 5;
     const DOWN_LIMIT_QUALITY = 0;
+    const DOWN_LIMIT_SELLIN = 0;
+
 
     abstract public function isItemForThisType(Item $item): bool;
 
@@ -41,5 +43,10 @@ abstract class GeneraltemUpdater
     protected function clearQuality(Item $item): void
     {
         $item->quality = self::DOWN_LIMIT_QUALITY;
+    }
+
+    protected function isInDownSellinLimit(Item $item): bool
+    {
+        return $item->sell_in < self::DOWN_LIMIT_SELLIN;
     }
 }

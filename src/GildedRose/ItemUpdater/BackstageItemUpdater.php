@@ -39,6 +39,10 @@ final class BackstageItemUpdater extends GeneraltemUpdater
 
     public function checkSellinAndUpdateQuality(Item $item): void
     {
+        if (!$this->isInDownSellinLimit($item)) {
+            return;
+        }
+
         $this->clearQuality($item);
     }
 }

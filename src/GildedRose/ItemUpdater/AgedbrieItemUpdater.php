@@ -27,6 +27,10 @@ final class AgedbrieItemUpdater extends GeneraltemUpdater
 
     public function checkSellinAndUpdateQuality(Item $item): void
     {
+        if (!$this->isInDownSellinLimit($item)) {
+            return;
+        }
+
         if ($item->quality >= self::UP_LIMIT) {
             return;
         }
