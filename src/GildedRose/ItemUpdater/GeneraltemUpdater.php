@@ -18,6 +18,13 @@ abstract class GeneraltemUpdater
 
     abstract public function updateItemQuality(Item $item): void;
 
+    abstract public function updateSellIn(Item $item): void;
+
+    protected function updateNormalSellIn(Item $item): void
+    {
+        $item->sell_in--;
+    }
+
     protected function increaseQuality(Item $item): void
     {
         $item->quality++;

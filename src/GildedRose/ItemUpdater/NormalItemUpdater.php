@@ -17,4 +17,9 @@ final class NormalItemUpdater extends GeneraltemUpdater
     {
         $this->decreaseQuality($item);
     }
+
+    public function updateSellIn(Item $item): void
+    {
+        $this->updateNormalSellIn($item);
+    }
 }

@@ -4,7 +4,7 @@ namespace GildedRose\ItemUpdater;
 
 use GildedRose\Item;
 
-class SulfurasItemUpdater extends GeneraltemUpdater
+final class SulfurasItemUpdater extends GeneraltemUpdater
 {
     public function isItemForThisType(Item $item): bool
     {
@@ -18,5 +18,10 @@ class SulfurasItemUpdater extends GeneraltemUpdater
         }
 
         $this->increaseQuality($item);
+    }
+
+    public function updateSellIn(Item $item): void
+    {
+        return;
     }
 }

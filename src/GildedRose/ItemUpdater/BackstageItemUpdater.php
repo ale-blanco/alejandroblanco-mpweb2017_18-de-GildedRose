@@ -4,7 +4,7 @@ namespace GildedRose\ItemUpdater;
 
 use GildedRose\Item;
 
-class BackstageItemUpdater extends GeneraltemUpdater
+final class BackstageItemUpdater extends GeneraltemUpdater
 {
     public function isItemForThisType(Item $item): bool
     {
@@ -30,5 +30,10 @@ class BackstageItemUpdater extends GeneraltemUpdater
         if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
             $this->increaseQuality($item);
         }
+    }
+
+    public function updateSellIn(Item $item): void
+    {
+        $this->updateNormalSellIn($item);
     }
 }

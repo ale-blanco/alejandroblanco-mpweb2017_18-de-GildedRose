@@ -61,11 +61,29 @@ class GildedRose
 
     private function updateItemSellIn(Item $item): void
     {
-        if ($item->name === NormalItemUpdater::ITEM_SULFURAS) {
+        $normalUpdater = new NormalItemUpdater();
+        if ($normalUpdater->isItemForThisType($item)) {
+            $normalUpdater->updateSellIn($item);
             return;
         }
 
-        $this->decreaseSellIn($item);
+        $sulfurasUpdater = new SulfurasItemUpdater();
+        if ($sulfurasUpdater->isItemForThisType($item)) {
+            $sulfurasUpdater->updateSellIn($item);
+            return;
+        }
+
+        $backstageUpdater = new BackstageItemUpdater();
+        if ($backstageUpdater->isItemForThisType($item)) {
+            $backstageUpdater->updateSellIn($item);
+            return;
+        }
+
+        $agedbrieUpdater = new AgedbrieItemUpdater();
+        if ($agedbrieUpdater->isItemForThisType($item)) {
+            $agedbrieUpdater->updateSellIn($item);
+            return;
+        }
     }
 
     private function checkSellInAndUpdateQuality(Item $item): void
@@ -104,10 +122,5 @@ class GildedRose
     private function clearQuality(Item $item): void
     {
         $item->quality = self::DOWN_LIMIT_QUALITY;
-    }
-
-    private function decreaseSellIn(Item $item): void
-    {
-        $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
     }
 }
