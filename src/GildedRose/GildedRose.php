@@ -4,9 +4,9 @@ namespace GildedRose;
 
 class GildedRose
 {
-    const BACKSTAGE = 'Backstage passes to a TAFKAL80ETC concert';
-    const AGEDBRIE = 'Aged Brie';
-    const SULFURAS = 'Sulfuras, Hand of Ragnaros';
+    const ITEM_BACKSTAGE = 'Backstage passes to a TAFKAL80ETC concert';
+    const ITEM_AGEDBRIE = 'Aged Brie';
+    const ITEM_SULFURAS = 'Sulfuras, Hand of Ragnaros';
 
     const UP_LIMIT = 50;
     const FIRST_TIME_LIMIT = 10;
@@ -23,16 +23,16 @@ class GildedRose
     public function update_quality(): void
     {
         foreach ($this->items as $item) {
-            if ($item->name != self::AGEDBRIE and $item->name != self::BACKSTAGE) {
+            if ($item->name != self::ITEM_AGEDBRIE and $item->name != self::ITEM_BACKSTAGE) {
                 if ($item->quality > 0) {
-                    if ($item->name != self::SULFURAS) {
+                    if ($item->name != self::ITEM_SULFURAS) {
                         $item->quality = $item->quality - self::VARIATION_QUALITY;
                     }
                 }
             } else {
                 if ($item->quality < self::UP_LIMIT) {
                     $item->quality = $item->quality + self::VARIATION_QUALITY;
-                    if ($item->name == self::BACKSTAGE) {
+                    if ($item->name == self::ITEM_BACKSTAGE) {
                         if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
                             if ($item->quality < self::UP_LIMIT) {
                                 $item->quality = $item->quality + self::VARIATION_QUALITY;
@@ -47,15 +47,15 @@ class GildedRose
                 }
             }
 
-            if ($item->name != self::SULFURAS) {
+            if ($item->name != self::ITEM_SULFURAS) {
                 $item->sell_in = $item->sell_in - self::VARIATION_QUALITY;
             }
 
             if ($item->sell_in < 0) {
-                if ($item->name != self::AGEDBRIE) {
-                    if ($item->name != self::BACKSTAGE) {
+                if ($item->name != self::ITEM_AGEDBRIE) {
+                    if ($item->name != self::ITEM_BACKSTAGE) {
                         if ($item->quality > 0) {
-                            if ($item->name != self::SULFURAS) {
+                            if ($item->name != self::ITEM_SULFURAS) {
                                 $item->quality = $item->quality - self::VARIATION_QUALITY;
                             }
                         }
