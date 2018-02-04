@@ -6,26 +6,28 @@ use GildedRose\Item;
 
 final class SulfurasItemUpdater extends GeneraltemUpdater
 {
-    public function isItemForThisType(Item $item): bool
+    const ITEM_SULFURAS = 'Sulfuras, Hand of Ragnaros';
+
+    public static function checkTypeItem(Item $item): bool
     {
         return $item->name === self::ITEM_SULFURAS;
     }
 
-    public function updateItemQuality(Item $item): void
+    protected function updateItemQuality(): void
     {
-        if ($this->isUpQualityLimit($item)) {
+        if ($this->isUpQualityLimit()) {
             return;
         }
 
-        $this->increaseQuality($item);
+        $this->increaseQuality();
     }
 
-    public function updateSellIn(Item $item): void
+    protected function updateSellIn(): void
     {
         return;
     }
 
-    public function checkSellinAndUpdateQuality(Item $item): void
+    protected function checkSellinAndUpdateQuality(): void
     {
         return;
     }

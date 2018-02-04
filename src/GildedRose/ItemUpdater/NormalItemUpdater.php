@@ -6,37 +6,37 @@ use GildedRose\Item;
 
 final class NormalItemUpdater extends GeneraltemUpdater
 {
-    public function isItemForThisType(Item $item): bool
+    public static function checkTypeItem(Item $item): bool
     {
-        return $item->name != self::ITEM_AGEDBRIE
-               && $item->name != self::ITEM_BACKSTAGE
-               && $item->name != self::ITEM_SULFURAS;
+        return !AgedbrieItemUpdater::checkTypeItem($item)
+            && !BackstageItemUpdater::checkTypeItem($item)
+            && !SulfurasItemUpdater::checkTypeItem($item);
     }
 
-    public function updateItemQuality(Item $item): void
+    protected function updateItemQuality(): void
     {
-        if ($item->quality <= self::DOWN_LIMIT_QUALITY) {
+        if ($this->item->quality <= self::DOWN_LIMIT_QUALITY) {
             return;
         }
 
-        $this->decreaseQuality($item);
+        $this->decreaseQuality();
     }
 
-    public function updateSellIn(Item $item): void
+    protected function updateSellIn(): void
     {
-        $this->updateNormalSellIn($item);
+        $this->updateNormalSellIn();
     }
 
-    public function checkSellinAndUpdateQuality(Item $item): void
+    protected function checkSellinAndUpdateQuality(): void
     {
-        if (!$this->isInDownSellinLimit($item)) {
+        if (!$this->isInDownSellinLimit()) {
             return;
         }
 
-        if ($item->quality <= self::DOWN_LIMIT_QUALITY ) {
+        if ($this->item->quality <= self::DOWN_LIMIT_QUALITY ) {
             return;
         }
 
-        $this->decreaseQuality($item);
+        $this->decreaseQuality();
     }
 }

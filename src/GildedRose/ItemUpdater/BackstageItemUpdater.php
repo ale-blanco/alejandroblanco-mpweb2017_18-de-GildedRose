@@ -6,43 +6,45 @@ use GildedRose\Item;
 
 final class BackstageItemUpdater extends GeneraltemUpdater
 {
-    public function isItemForThisType(Item $item): bool
+    private const ITEM_BACKSTAGE = 'Backstage passes to a TAFKAL80ETC concert';
+
+    public static function checkTypeItem(Item $item): bool
     {
         return $item->name === self::ITEM_BACKSTAGE;
     }
 
-    public function updateItemQuality(Item $item): void
+    protected function updateItemQuality(): void
     {
-        if ($this->isUpQualityLimit($item)) {
+        if ($this->isUpQualityLimit()) {
             return;
         }
 
-        $this->increaseQuality($item);
+        $this->increaseQuality();
 
-        if ($item->quality >= self::UP_LIMIT) {
+        if ($this->item->quality >= self::UP_LIMIT) {
             return;
         }
 
-        if ($item->sell_in <= self::FIRST_TIME_LIMIT) {
-            $this->increaseQuality($item);
+        if ($this->item->sell_in <= self::FIRST_TIME_LIMIT) {
+            $this->increaseQuality();
         }
 
-        if ($item->sell_in <= self::SECOND_TIME_LIMIT) {
-            $this->increaseQuality($item);
+        if ($this->item->sell_in <= self::SECOND_TIME_LIMIT) {
+            $this->increaseQuality();
         }
     }
 
-    public function updateSellIn(Item $item): void
+    protected function updateSellIn(): void
     {
-        $this->updateNormalSellIn($item);
+        $this->updateNormalSellIn();
     }
 
-    public function checkSellinAndUpdateQuality(Item $item): void
+    protected function checkSellinAndUpdateQuality(): void
     {
-        if (!$this->isInDownSellinLimit($item)) {
+        if (!$this->isInDownSellinLimit()) {
             return;
         }
 
-        $this->clearQuality($item);
+        $this->clearQuality();
     }
 }

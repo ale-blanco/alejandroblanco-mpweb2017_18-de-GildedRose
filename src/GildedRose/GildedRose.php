@@ -2,47 +2,45 @@
 
 namespace GildedRose;
 
-use GildedRose\ItemUpdater\AgedbrieItemUpdater;
-use GildedRose\ItemUpdater\BackstageItemUpdater;
+use GildedRose\ItemUpdater\Factory\AgedbrieItemUpdaterFactory;
+use GildedRose\ItemUpdater\Factory\BackstageItemUpdaterFactory;
+use GildedRose\ItemUpdater\Factory\NormalItemUpdaterFactory;
+use GildedRose\ItemUpdater\Factory\SulfurasItemUpdaterFactory;
 use GildedRose\ItemUpdater\GeneraltemUpdater;
-use GildedRose\ItemUpdater\NormalItemUpdater;
-use GildedRose\ItemUpdater\SulfurasItemUpdater;
 
 class GildedRose
 {
+    private $itemsUpdaters = [];
+    private $listUpdatersFactorys;
 
-    private $items;
-    private $listUpdaters;
-
-    public function __construct($items)
+    public function __construct(array $items)
     {
-        $this->items = $items;
-        $this->listUpdaters = [
-            new NormalItemUpdater(),
-            new AgedbrieItemUpdater(),
-            new BackstageItemUpdater(),
-            new SulfurasItemUpdater()
+        $this->listUpdatersFactorys = [
+            new NormalItemUpdaterFactory(),
+            new AgedbrieItemUpdaterFactory(),
+            new BackstageItemUpdaterFactory(),
+            new SulfurasItemUpdaterFactory()
         ];
+
+        foreach ($items as $item) {
+            $this->itemsUpdaters[] = $this->getUpdater($item);
+        }
     }
 
     public function update_quality(): void
     {
-
-        foreach ($this->items as $item) {
-            $updater = $this->getUpdater($item);
-
-            $updater->updateItemQuality($item);
-            $updater->updateSellIn($item);
-            $updater->checkSellInAndUpdateQuality($item);
+        foreach ($this->itemsUpdaters as $item) {
+            $item->update();
         }
     }
 
     private function getUpdater(Item $item): GeneraltemUpdater
     {
-        foreach ($this->listUpdaters as $updater) {
-            if ($updater->isItemForThisType($item)) {
-                return $updater;
+        foreach ($this->listUpdatersFactorys as $factory) {
+            if (!$factory->checkTypeItem($item)) {
+                continue;
             }
+            return $factory->createItemUpdate($item);
         }
 
         throw new \Exception('No hay updater para ese item');

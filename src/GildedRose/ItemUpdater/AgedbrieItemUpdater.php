@@ -6,35 +6,37 @@ use GildedRose\Item;
 
 final class AgedbrieItemUpdater extends GeneraltemUpdater
 {
-    public function isItemForThisType(Item $item): bool
+    private const ITEM_AGEDBRIE = 'Aged Brie';
+
+    public static function checkTypeItem(Item $item): bool
     {
         return $item->name === self::ITEM_AGEDBRIE;
     }
 
-    public function updateItemQuality(Item $item): void
+    protected function updateItemQuality(): void
     {
-        if ($this->isUpQualityLimit($item)) {
+        if ($this->isUpQualityLimit()) {
             return;
         }
 
-        $this->increaseQuality($item);
+        $this->increaseQuality();
     }
 
-    public function updateSellIn(Item $item): void
+    protected function updateSellIn(): void
     {
-        $this->updateNormalSellIn($item);
+        $this->updateNormalSellIn();
     }
 
-    public function checkSellinAndUpdateQuality(Item $item): void
+    protected function checkSellinAndUpdateQuality(): void
     {
-        if (!$this->isInDownSellinLimit($item)) {
+        if (!$this->isInDownSellinLimit()) {
             return;
         }
 
-        if ($item->quality >= self::UP_LIMIT) {
+        if ($this->item->quality >= self::UP_LIMIT) {
             return;
         }
 
-        $this->increaseQuality($item);
+        $this->increaseQuality();
     }
 }
