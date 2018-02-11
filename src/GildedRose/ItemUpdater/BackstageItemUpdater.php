@@ -2,15 +2,13 @@
 
 namespace GildedRose\ItemUpdater;
 
-use GildedRose\Item;
-
 final class BackstageItemUpdater extends GeneraltemUpdater
 {
     private const ITEM_BACKSTAGE = 'Backstage passes to a TAFKAL80ETC concert';
 
-    public static function checkTypeItem(Item $item): bool
+    public static function checkTypeItem(string $name): bool
     {
-        return $item->name === self::ITEM_BACKSTAGE;
+        return $name === self::ITEM_BACKSTAGE;
     }
 
     protected function updateItemQuality(): void
@@ -21,15 +19,15 @@ final class BackstageItemUpdater extends GeneraltemUpdater
 
         $this->increaseQuality();
 
-        if ($this->item->quality >= self::UP_LIMIT) {
+        if ($this->quality >= self::UP_LIMIT) {
             return;
         }
 
-        if ($this->item->sell_in <= self::FIRST_TIME_LIMIT) {
+        if ($this->sell_in <= self::FIRST_TIME_LIMIT) {
             $this->increaseQuality();
         }
 
-        if ($this->item->sell_in <= self::SECOND_TIME_LIMIT) {
+        if ($this->sell_in <= self::SECOND_TIME_LIMIT) {
             $this->increaseQuality();
         }
     }

@@ -4,7 +4,7 @@ namespace GildedRose\ItemUpdater;
 
 use GildedRose\Item;
 
-abstract class GeneraltemUpdater
+abstract class GeneraltemUpdater extends Item
 {
     const UP_LIMIT = 50;
     const FIRST_TIME_LIMIT = 10;
@@ -14,16 +14,12 @@ abstract class GeneraltemUpdater
 
     protected $item;
 
-    public function __construct(Item $item)
+    public function __construct(string $name, int $sellIn, int $quality)
     {
-        if (!self::checkTypeItem($item)) {
-            throw new \Exception('Tipo de item no valido');
-        }
-
-        $this->item = $item;
+        parent::__construct($name, $sellIn, $quality);
     }
 
-    abstract public static function checkTypeItem(Item $item): bool;
+    abstract public static function checkTypeItem(string $name): bool;
 
     abstract protected function updateItemQuality(): void;
 
@@ -40,31 +36,31 @@ abstract class GeneraltemUpdater
 
     protected function updateNormalSellIn(): void
     {
-        $this->item->sell_in--;
+        $this->sell_in--;
     }
 
     protected function increaseQuality(): void
     {
-        $this->item->quality++;
+        $this->quality++;
     }
 
     protected function decreaseQuality(): void
     {
-        $this->item->quality--;
+        $this->quality--;
     }
 
     protected function clearQuality(): void
     {
-        $this->item->quality = self::DOWN_LIMIT_QUALITY;
+        $this->quality = self::DOWN_LIMIT_QUALITY;
     }
 
     protected function isInDownSellinLimit(): bool
     {
-        return $this->item->sell_in < self::DOWN_LIMIT_SELLIN;
+        return $this->sell_in < self::DOWN_LIMIT_SELLIN;
     }
 
     protected function isUpQualityLimit(): bool
     {
-        return $this->item->quality >= self::UP_LIMIT;
+        return $this->quality >= self::UP_LIMIT;
     }
 }

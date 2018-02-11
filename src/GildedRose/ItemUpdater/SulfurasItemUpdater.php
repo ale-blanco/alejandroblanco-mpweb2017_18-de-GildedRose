@@ -2,15 +2,13 @@
 
 namespace GildedRose\ItemUpdater;
 
-use GildedRose\Item;
-
 final class SulfurasItemUpdater extends GeneraltemUpdater
 {
     const ITEM_SULFURAS = 'Sulfuras, Hand of Ragnaros';
 
-    public static function checkTypeItem(Item $item): bool
+    public static function checkTypeItem(string $name): bool
     {
-        return $item->name === self::ITEM_SULFURAS;
+        return $name === self::ITEM_SULFURAS;
     }
 
     protected function updateItemQuality(): void

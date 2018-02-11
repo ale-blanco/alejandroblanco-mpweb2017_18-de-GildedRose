@@ -2,20 +2,18 @@
 
 namespace GildedRose\ItemUpdater;
 
-use GildedRose\Item;
-
 final class NormalItemUpdater extends GeneraltemUpdater
 {
-    public static function checkTypeItem(Item $item): bool
+    public static function checkTypeItem(string $name): bool
     {
-        return !AgedbrieItemUpdater::checkTypeItem($item)
-            && !BackstageItemUpdater::checkTypeItem($item)
-            && !SulfurasItemUpdater::checkTypeItem($item);
+        return !AgedbrieItemUpdater::checkTypeItem($name)
+            && !BackstageItemUpdater::checkTypeItem($name)
+            && !SulfurasItemUpdater::checkTypeItem($name);
     }
 
     protected function updateItemQuality(): void
     {
-        if ($this->item->quality <= self::DOWN_LIMIT_QUALITY) {
+        if ($this->quality <= self::DOWN_LIMIT_QUALITY) {
             return;
         }
 
@@ -33,7 +31,7 @@ final class NormalItemUpdater extends GeneraltemUpdater
             return;
         }
 
-        if ($this->item->quality <= self::DOWN_LIMIT_QUALITY ) {
+        if ($this->quality <= self::DOWN_LIMIT_QUALITY ) {
             return;
         }
 

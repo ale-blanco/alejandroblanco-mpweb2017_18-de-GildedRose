@@ -2,29 +2,21 @@
 
 namespace GildedRose;
 
-use GildedRose\ItemUpdater\Factory\AgedbrieItemUpdaterFactory;
-use GildedRose\ItemUpdater\Factory\BackstageItemUpdaterFactory;
-use GildedRose\ItemUpdater\Factory\NormalItemUpdaterFactory;
-use GildedRose\ItemUpdater\Factory\SulfurasItemUpdaterFactory;
 use GildedRose\ItemUpdater\GeneraltemUpdater;
 
 class GildedRose
 {
     private $itemsUpdaters = [];
-    private $listUpdatersFactorys;
 
-    public function __construct(array $items)
+    public function __construct(array $itemsUpdater)
     {
-        $this->listUpdatersFactorys = [
-            new NormalItemUpdaterFactory(),
-            new AgedbrieItemUpdaterFactory(),
-            new BackstageItemUpdaterFactory(),
-            new SulfurasItemUpdaterFactory()
-        ];
-
-        foreach ($items as $item) {
-            $this->itemsUpdaters[] = $this->getUpdater($item);
+        foreach ($itemsUpdater as $item) {
+            if (!$item instanceof GeneraltemUpdater) {
+                throw new \Exception('Tipo de item no valido');
+            }
         }
+
+        $this->itemsUpdaters = $itemsUpdater;
     }
 
     public function update_quality(): void
@@ -32,17 +24,5 @@ class GildedRose
         foreach ($this->itemsUpdaters as $item) {
             $item->update();
         }
-    }
-
-    private function getUpdater(Item $item): GeneraltemUpdater
-    {
-        foreach ($this->listUpdatersFactorys as $factory) {
-            if (!$factory->checkTypeItem($item)) {
-                continue;
-            }
-            return $factory->createItemUpdate($item);
-        }
-
-        throw new \Exception('No hay updater para ese item');
     }
 }
