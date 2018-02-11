@@ -6,28 +6,28 @@ final class BackstageItemUpdater extends GeneraltemUpdater
 {
     private const ITEM_BACKSTAGE = 'Backstage passes to a TAFKAL80ETC concert';
 
-    public static function checkTypeItem(string $name): bool
+    public static function checkItemType(string $name): bool
     {
         return $name === self::ITEM_BACKSTAGE;
     }
 
     protected function updateItemQuality(): void
     {
-        if ($this->isUpQualityLimit()) {
+        if ($this->isUpperQualityLimit()) {
             return;
         }
 
         $this->increaseQuality();
 
-        if ($this->quality >= self::UP_LIMIT) {
+        if ($this->isUpperQualityLimit()) {
             return;
         }
 
-        if ($this->sell_in <= self::FIRST_TIME_LIMIT) {
+        if ($this->isDownFirtsTimeLimit()) {
             $this->increaseQuality();
         }
 
-        if ($this->sell_in <= self::SECOND_TIME_LIMIT) {
+        if ($this->isDownSecondTimeLimit()) {
             $this->increaseQuality();
         }
     }
@@ -44,5 +44,15 @@ final class BackstageItemUpdater extends GeneraltemUpdater
         }
 
         $this->clearQuality();
+    }
+
+    private function isDownFirtsTimeLimit(): bool
+    {
+        return $this->sell_in <= self::FIRST_TIME_LIMIT;
+    }
+
+    private function isDownSecondTimeLimit(): bool
+    {
+        return $this->sell_in <= self::SECOND_TIME_LIMIT;
     }
 }

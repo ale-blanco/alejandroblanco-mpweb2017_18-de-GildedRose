@@ -19,7 +19,7 @@ abstract class GeneraltemUpdater extends Item
         parent::__construct($name, $sellIn, $quality);
     }
 
-    abstract public static function checkTypeItem(string $name): bool;
+    abstract public static function checkItemType(string $name): bool;
 
     abstract protected function updateItemQuality(): void;
 
@@ -59,7 +59,7 @@ abstract class GeneraltemUpdater extends Item
         return $this->sell_in < self::DOWN_LIMIT_SELLIN;
     }
 
-    protected function isUpQualityLimit(): bool
+    protected function isUpperQualityLimit(): bool
     {
         return $this->quality >= self::UP_LIMIT;
     }

@@ -2,18 +2,18 @@
 
 namespace GildedRose\ItemUpdater;
 
-final class AgedbrieItemUpdater extends GeneraltemUpdater
+final class AgedBrieItemUpdater extends GeneraltemUpdater
 {
     private const ITEM_AGEDBRIE = 'Aged Brie';
 
-    public static function checkTypeItem(string $name): bool
+    public static function checkItemType(string $name): bool
     {
         return $name === self::ITEM_AGEDBRIE;
     }
 
     protected function updateItemQuality(): void
     {
-        if ($this->isUpQualityLimit()) {
+        if ($this->isUpperQualityLimit()) {
             return;
         }
 
@@ -31,7 +31,7 @@ final class AgedbrieItemUpdater extends GeneraltemUpdater
             return;
         }
 
-        if ($this->quality >= self::UP_LIMIT) {
+        if ($this->isUpperQualityLimit()) {
             return;
         }
 

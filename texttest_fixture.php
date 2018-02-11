@@ -31,5 +31,5 @@ for ($i = 0; $i < $days; $i++) {
         echo $item . PHP_EOL;
     }
     echo PHP_EOL;
-    $app->update_quality();
+    $app->updateQuality();
 }

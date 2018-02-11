@@ -19,7 +19,7 @@ class GildedRose
         $this->itemsUpdaters = $itemsUpdater;
     }
 
-    public function update_quality(): void
+    public function updateQuality(): void
     {
         foreach ($this->itemsUpdaters as $item) {
             $item->update();
