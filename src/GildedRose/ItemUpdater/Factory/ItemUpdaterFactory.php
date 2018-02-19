@@ -2,6 +2,7 @@
 
 namespace GildedRose\ItemUpdater\Factory;
 
+use GildedRose\Item;
 use GildedRose\ItemUpdater\AgedBrieItemUpdater;
 use GildedRose\ItemUpdater\BackstageItemUpdater;
 use GildedRose\ItemUpdater\GeneraltemUpdater;
@@ -10,16 +11,16 @@ use GildedRose\ItemUpdater\SulfurasItemUpdater;
 
 class ItemUpdaterFactory
 {
-    public static function create(string $name, int $sellIn, int $quality): GeneraltemUpdater
+    public static function create(Item $item): GeneraltemUpdater
     {
-        if (AgedBrieItemUpdater::checkItemType($name)) {
-            return new AgedBrieItemUpdater($name, $sellIn, $quality);
-        } elseif (BackstageItemUpdater::checkItemType($name)) {
-            return new BackstageItemUpdater($name, $sellIn, $quality);
-        } elseif (SulfurasItemUpdater::checkItemType($name)) {
-            return new SulfurasItemUpdater($name, $sellIn, $quality);
+        if (AgedBrieItemUpdater::checkItemType($item->name)) {
+            return new AgedBrieItemUpdater($item);
+        } elseif (BackstageItemUpdater::checkItemType($item->name)) {
+            return new BackstageItemUpdater($item);
+        } elseif (SulfurasItemUpdater::checkItemType($item->name)) {
+            return new SulfurasItemUpdater($item);
         } else {
-            return new NormalItemUpdater($name, $sellIn, $quality);
+            return new NormalItemUpdater($item);
         }
     }
 }

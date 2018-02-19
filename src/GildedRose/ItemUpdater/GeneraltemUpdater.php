@@ -14,9 +14,10 @@ abstract class GeneraltemUpdater extends Item
 
     protected $item;
 
-    public function __construct(string $name, int $sellIn, int $quality)
+    public function __construct(Item $item)
     {
-        parent::__construct($name, $sellIn, $quality);
+        parent::__construct($item->name, $item->sell_in, $item->quality);
+        $this->item = $item;
     }
 
     abstract public static function checkItemType(string $name): bool;
